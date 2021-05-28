@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Net.Http.Headers;
 
 namespace BlazorTodoApp
 {
@@ -22,6 +23,14 @@ namespace BlazorTodoApp
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+
+            services.AddHttpClient<UserService>(client =>
+            {
+                client.BaseAddress = new System.Uri(Configuration["RandomUserApiBaseUrl"]);
+                client.DefaultRequestHeaders.Accept
+                .Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            });
+
             services.AddSingleton<WeatherForecastService>();
         }
 

@@ -1,0 +1,49 @@
+﻿@page "/users"
+
+@using BlazorTodoApp.Services
+@using Microsoft.Extensions.Configuration;
+
+@inject UserService UserService
+@inject IConfiguration Configuration
+
+<h3>Users</h3>
+
+<p>This component fetches data from the UserService which makes a request to the REST API: <a href="@Configuration["RandomUserApiBaseUrl"]" target="_blank">Random User Generator</a></p>
+
+@if (users == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Gender</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in users)
+            {
+                <tr>
+                    <td>@user.FullName</td>
+                    <td>@user.Email</td>
+                    <td>@user.Phone</td>
+                    <td>@user.Gender</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IEnumerable<UserInfo> users;
+
+    protected override async Task OnInitializedAsync()
+    {
+        users = await UserService.GetUsersAsync();
+    }
+}
